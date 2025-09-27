@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  status: 'idle', // idle, in-progress, completed
+  status: 'idle', // idle, in-progress, completed, paused
   currentCandidate: null,
   questions: [],
   currentQuestionIndex: 0,
@@ -9,6 +9,8 @@ const initialState = {
   timeRemaining: 0,
   startTime: null,
   endTime: null,
+  pauseTime: 0,
+  totalPausedTime: 0,
 };
 
 const interviewSlice = createSlice({
@@ -36,6 +38,8 @@ const interviewSlice = createSlice({
         answers: [],
         timeRemaining,
         startTime: new Date().toISOString(),
+        pauseTime: 0,
+        totalPausedTime: 0,
       };
     },
     submitAnswer: (state, action) => {
@@ -70,6 +74,20 @@ const interviewSlice = createSlice({
       state.endTime = new Date().toISOString();
       state.finalScore = finalScore;
     },
+    pauseInterview: (state) => {
+      if (state.status === 'in-progress') {
+        state.status = 'paused';
+        state.pauseTime = new Date().toISOString();
+      }
+    },
+    resumeInterview: (state) => {
+      if (state.status === 'paused') {
+        const pauseDuration = new Date() - new Date(state.pauseTime);
+        state.totalPausedTime += pauseDuration;
+        state.status = 'in-progress';
+        state.pauseTime = 0;
+      }
+    },
     restoreSession: (state) => {
       state.status = 'in-progress';
     },
@@ -83,6 +101,8 @@ export const {
   submitAnswer,
   nextQuestion,
   completeInterview,
+  pauseInterview,
+  resumeInterview,
   restoreSession,
   resetInterview,
 } = interviewSlice.actions;

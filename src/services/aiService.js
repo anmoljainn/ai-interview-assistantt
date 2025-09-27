@@ -78,28 +78,3 @@ export const evaluateAnswer = async (question, answer) => {
     feedback
   };
 };
-
-// Generate interview summary
-export const generateSummary = async (candidateData, questions, answers) => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Calculate average score
-  const totalScore = answers.reduce((sum, answer) => {
-    return sum + (answer.evaluation?.score || 0);
-  }, 0);
-  
-  const averageScore = totalScore / answers.length;
-  
-  // Generate summary based on average score
-  let summary = '';
-  if (averageScore >= 8) {
-    summary = `${candidateData.name} demonstrated excellent knowledge across all difficulty levels. They showed particularly strong understanding of React concepts and Node.js architecture. Their answers were detailed and well-structured, indicating solid practical experience. This candidate would be a strong addition to any full-stack development team.`;
-  } else if (averageScore >= 6) {
-    summary = `${candidateData.name} showed good understanding of fundamental concepts with room for improvement in more complex areas. They handled basic React questions well but struggled with some advanced topics. With additional experience in Node.js and performance optimization, this candidate could develop into a valuable team member.`;
-  } else {
-    summary = `${candidateData.name} showed limited understanding of key full-stack development concepts. While they had some basic knowledge of React, they struggled with more complex questions and Node.js architecture. This candidate would require significant mentoring and training before being productive in a full-stack role.`;
-  }
-  
-  return summary;
-};
